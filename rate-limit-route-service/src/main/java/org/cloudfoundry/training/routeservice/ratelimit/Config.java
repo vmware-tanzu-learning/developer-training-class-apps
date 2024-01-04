@@ -22,14 +22,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.DefaultResponseErrorHandler;
-import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class Config {
 
     @Bean
-    RestOperations restOperations() {
+    RestTemplate restOperations() {
         RestTemplate restTemplate = new RestTemplate(new TrustEverythingClientHttpRequestFactory());
         restTemplate.setErrorHandler(new NoErrorsResponseErrorHandler());
         return restTemplate;

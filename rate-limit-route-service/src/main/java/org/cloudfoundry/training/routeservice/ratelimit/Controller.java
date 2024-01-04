@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestOperations;
 
 @RestController
+//@RequestMapping("/")
 final class Controller {
 	
 	static final String CF_FORWARDED_URL = "X-Cf-Forwarded-Url";

@@ -1,6 +1,7 @@
 package org.cloudfoundry.training.routeservice.ratelimit.limiter;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.cloudfoundry.training.routeservice.ratelimit.record.AccessRecord;
 import org.cloudfoundry.training.routeservice.ratelimit.record.AccessRecordRepository;
@@ -15,7 +16,10 @@ public class RateLimiter {
 	
 	@Autowired
 	private AccessRecordRepository repository;
-	
+
+	public RateLimiter() {
+	}
+
 	public RateLimiter(int numRequestsPerPeriod, int periodInSeconds) {
 		this.numRequestsPerPeriod = numRequestsPerPeriod;
 		this.periodInSeconds = periodInSeconds;
@@ -28,15 +32,16 @@ public class RateLimiter {
 	}
 
 	public boolean isAllowed(String clientId) {
-		AccessRecord record = repository.findOne(clientId);
-		if ( record == null ) {
+		Optional<AccessRecord> currentRecord = repository.findById(clientId);
+		if ( currentRecord.isEmpty() ) {
 			repository.save(new AccessRecord(clientId, 1, new Date()));
 			return true;
 		}
 		Date now = new Date();
 		
-		Date validDate = new Date(now.getTime() - periodInSeconds*1000); 
-		
+		Date validDate = new Date(now.getTime() - periodInSeconds*1000);
+
+		AccessRecord record = currentRecord.get();
 		if ( record.getLastSuccess().before(validDate) ) {
 			// it doesn't matter the count.  reset it and the date.
 			record.setCount(1);

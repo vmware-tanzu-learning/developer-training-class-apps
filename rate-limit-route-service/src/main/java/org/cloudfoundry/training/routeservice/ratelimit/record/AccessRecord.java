@@ -2,8 +2,8 @@ package org.cloudfoundry.training.routeservice.ratelimit.record;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 @Entity
 public class AccessRecord {

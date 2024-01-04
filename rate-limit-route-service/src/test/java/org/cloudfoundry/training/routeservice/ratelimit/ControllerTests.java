@@ -9,14 +9,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.cloudfoundry.training.routeservice.ratelimit.limiter.RateLimiter;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,7 +23,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 public class ControllerTests {
 
@@ -39,7 +37,7 @@ public class ControllerTests {
     @Autowired
     private RateLimiter limiter;
     
-    @Before
+    @BeforeEach
     public void setup() {
     	limiter.setNumRequestsPerPeriod(3);
     	limiter.setPeriodInSeconds(5);
@@ -56,7 +54,7 @@ public class ControllerTests {
 	        .andRespond(withSuccess());
 
 	    this.mockMvc
-	        .perform(get("http://localhost/route-service/get")
+	        .perform(get("/")
 	            .header(Controller.FORWARDED_URL, "http://localhost/original/get")
 	            .header(Controller.CF_FORWARDED_URL, "127.0.0.1")
 	            .header(Controller.PROXY_METADATA, PROXY_METADATA_VALUE)
@@ -78,7 +76,7 @@ public class ControllerTests {
     	
     	for ( int i = 0; i < limiter.getNumRequestsPerPeriod(); i++ ) {		
 		    this.mockMvc
-		        .perform(get("http://localhost/route-service/get")
+		        .perform(get("/")
 		            .header(Controller.FORWARDED_URL, "http://localhost/original/get")
 		            .header(Controller.CF_FORWARDED_URL, "127.0.0.1")
 		            .header(Controller.PROXY_METADATA, PROXY_METADATA_VALUE)
@@ -87,7 +85,7 @@ public class ControllerTests {
     	} 	
     	
     	this.mockMvc
-        .perform(get("http://localhost/route-service/get")
+        .perform(get("/")
             .header(Controller.FORWARDED_URL, "http://localhost/original/get")
             .header(Controller.CF_FORWARDED_URL, "127.0.0.1")
             .header(Controller.PROXY_METADATA, PROXY_METADATA_VALUE)
@@ -110,7 +108,7 @@ public class ControllerTests {
 	    	
 	   	for ( int i = 0; i < limiter.getNumRequestsPerPeriod(); i++ ) {		
 		    this.mockMvc
-		        .perform(get("http://localhost/route-service/get")
+		        .perform(get("/")
 		            .header(Controller.FORWARDED_URL, "http://localhost/original/get")
 		            .header(Controller.CF_FORWARDED_URL, "127.0.0.1")
 		            .header(Controller.PROXY_METADATA, PROXY_METADATA_VALUE)
@@ -121,7 +119,7 @@ public class ControllerTests {
 	   	Thread.sleep((limiter.getPeriodInSeconds() + 1) * 1000);
 	   	
 	    this.mockMvc
-	      	.perform(get("http://localhost/route-service/get")
+	      	.perform(get("/")
 	            .header(Controller.FORWARDED_URL, "http://localhost/original/get")
 	            .header(Controller.CF_FORWARDED_URL, "127.0.0.1")
 	            .header(Controller.PROXY_METADATA, PROXY_METADATA_VALUE)
