@@ -10,9 +10,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class ApplicationTests {
 
-	@MockBean(name = "localProps")
-	private CloudProps cloudProperties;
-	
 	@Test
 	public void contextLoads() {
 	}

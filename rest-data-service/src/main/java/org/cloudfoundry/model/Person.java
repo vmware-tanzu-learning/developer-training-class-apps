@@ -3,12 +3,12 @@ package org.cloudfoundry.model;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -30,7 +30,7 @@ public class Person {
 	@OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
 	private Set<PersonStatus> personStatuses;
 
-	Person() {
+	public Person() {
 	}
 
 	public Person(String firstName, String lastName, String email, String phoneNumber, String companyName) {

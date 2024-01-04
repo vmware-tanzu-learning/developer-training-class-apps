@@ -41,10 +41,7 @@ public class PersonStatusControllerTest {
 
 	@Autowired
 	private PersonStatusRepository statusRepository;
-
-	@MockBean(name = "localProps")
-	private CloudProps cloudProperties;
-
+	
 	private UUID personId;
 
 	@Before

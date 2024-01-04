@@ -50,8 +50,8 @@ public class ControllerTest {
 	@Autowired
 	private PersonRepository repository;
 
-	@MockBean(name = "localProps")
-	private CloudProps cloudProperties;
+//	@MockBean(name = "localProps")
+//	private CloudProps cloudProperties;
 
 	@Autowired
 	void setConverters(HttpMessageConverter<?>[] converters) {

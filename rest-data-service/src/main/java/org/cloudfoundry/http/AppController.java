@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.cloudfoundry.CloudConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AppController {
 
-	private CloudConfigProperties config;
+	@Value("${vcap.application.name:<app-name>}")
+	private String appName;
+
+	@Value("${vcap.application.instance_index:<instance-index>}")
+	private String appInstanceIndex;
 
 	private DataSource db;
 
@@ -33,8 +36,7 @@ public class AppController {
 	private String appVersion;
 
 	@Autowired
-	public AppController(CloudConfigProperties config, DataSource db) {
-		this.config = config;
+	public AppController(DataSource db) {
 		this.db = db;
 	}
 
@@ -45,7 +47,6 @@ public class AppController {
 
 	@RequestMapping("/app-details")
 	public AppDetails info() throws SQLException {
-		Properties cloudProperties = config.cloudProperties();
 		Map<String, String> map = new HashMap<>();
 		if (rosterVarA != null) {
 			map.put("ROSTER_A", rosterVarA);
@@ -59,8 +60,7 @@ public class AppController {
 		if (map.isEmpty()) {
 			map = null;
 		}
-		return new AppDetails(cloudProperties.getProperty("cloud.application.name"),
-				cloudProperties.get("cloud.application.instance_index").toString(),
+		return new AppDetails(appName, appInstanceIndex,
 				db.getConnection().getMetaData().getURL(), this.appVersion, map);
 
 	}
