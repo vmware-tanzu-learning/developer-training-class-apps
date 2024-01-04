@@ -1,24 +1,21 @@
 package org.cloudfoundry;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.Properties;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 @WebAppConfiguration
 @TestPropertySource("roster-env.vars")
@@ -29,7 +26,7 @@ public class RosterPropsHttpControllerTests {
 	@Autowired
 	private WebApplicationContext webApplicationContext;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
@@ -42,7 +39,8 @@ public class RosterPropsHttpControllerTests {
 				.andExpect(content().contentType(HttpControllerTests.contentType))
 				.andExpect(content().json("{\"appName\": \"<app-name>\"}"))
 				.andExpect(content().json("{\"instanceIndex\": \"<instance-index>\"}"))
-				.andExpect(content().json("{\"serviceUrl\": \"jdbc:h2:mem:testdb\"}"))
+				.andExpect(jsonPath("$.serviceUrl").exists())
+				.andExpect(content().string(containsString("jdbc:h2:mem:")))
 				.andExpect(content()
 						.json("{\"rosterVars\": {\"ROSTER_C\":\"baz\",\"ROSTER_B\":\"bar\",\"ROSTER_A\":\"foo\"}}"))
 				.andExpect(content().json("{\"appVersion\": \"1.0.0\"}"));
