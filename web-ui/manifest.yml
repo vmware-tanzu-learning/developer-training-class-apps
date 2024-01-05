@@ -6,3 +6,5 @@ applications:
   memory: 128M
   instances: 1
   stack: cflinuxfs3
+  random-route: true
+
